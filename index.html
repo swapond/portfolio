@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alex Carter | Senior Front-End Engineer</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              charcoal: "#0B0B0C",
+              ink: "#111111",
+              accent: "#FF6A00",
+              accentLight: "#FF7A18",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            boxShadow: {
+              glow: "0 0 0 1px rgba(255,122,24,0.25), 0 15px 50px rgba(255,106,0,0.15)",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-12px)" },
+              },
+              pulseSoft: {
+                "0%, 100%": { opacity: 0.5 },
+                "50%": { opacity: 0.9 },
+              },
+            },
+            animation: {
+              float: "float 8s ease-in-out infinite",
+              pulseSoft: "pulseSoft 6s ease-in-out infinite",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background: radial-gradient(circle at 20% 10%, rgba(255, 106, 0, 0.18), transparent 35%),
+          radial-gradient(circle at 80% 20%, rgba(255, 122, 24, 0.14), transparent 40%), #0b0b0c;
+      }
+
+      /* Subtle noise texture overlay */
+      .noise::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.08;
+        z-index: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      }
+
+      /* Reusable reveal state */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+
+  <body class="noise text-white font-sans antialiased selection:bg-accent/30 selection:text-white">
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-[100] grid place-items-center bg-charcoal transition-opacity duration-700">
+      <div class="text-center">
+        <div class="mx-auto h-14 w-14 rounded-full border-2 border-white/20 border-t-accent animate-spin"></div>
+        <p class="mt-4 text-sm text-white/70 tracking-[0.2em] uppercase">Loading Portfolio</p>
+      </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="fixed left-0 top-0 z-[90] h-1 w-full bg-transparent">
+      <div id="scroll-progress" class="h-full w-0 bg-gradient-to-r from-accent to-accentLight transition-[width] duration-150"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header id="navbar" class="fixed top-0 z-50 w-full border-b border-transparent transition-all duration-300">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
+        <a href="#hero" class="font-display text-lg font-bold tracking-wide">A<span class="text-accent">.</span>Carter</a>
+
+        <button id="menu-toggle" class="rounded-xl border border-white/15 p-2 text-white md:hidden" aria-label="Open menu">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <ul class="hidden items-center gap-6 text-sm text-white/80 md:flex">
+          <li><a href="#about" class="transition hover:text-accentLight">About</a></li>
+          <li><a href="#skills" class="transition hover:text-accentLight">Skills</a></li>
+          <li><a href="#experience" class="transition hover:text-accentLight">Experience</a></li>
+          <li><a href="#projects" class="transition hover:text-accentLight">Projects</a></li>
+          <li><a href="#contact" class="transition hover:text-accentLight">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mx-4 hidden rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl md:hidden">
+        <ul class="space-y-3 text-sm text-white/85">
+          <li><a class="block rounded-lg p-2 hover:bg-white/5" href="#about">About</a></li>
+          <li><a class="block rounded-lg p-2 hover:bg-white/5" href="#skills">Skills</a></li>
+          <li><a class="block rounded-lg p-2 hover:bg-white/5" href="#experience">Experience</a></li>
+          <li><a class="block rounded-lg p-2 hover:bg-white/5" href="#projects">Projects</a></li>
+          <li><a class="block rounded-lg p-2 hover:bg-white/5" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <main class="relative z-10">
+      <!-- Hero Section -->
+      <section id="hero" class="relative mx-auto flex min-h-screen max-w-6xl items-center px-6 pb-24 pt-36 lg:px-8">
+        <div class="absolute -left-16 top-24 h-72 w-72 animate-pulseSoft rounded-full bg-accent/20 blur-3xl"></div>
+        <div class="absolute right-0 top-44 h-64 w-64 animate-float rounded-full bg-accentLight/15 blur-3xl"></div>
+
+        <div class="relative w-full reveal">
+          <p class="mb-4 inline-flex rounded-full border border-white/15 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.2em] text-white/70 backdrop-blur">
+            Available for freelance & full-time
+          </p>
+          <h1 class="font-display text-4xl font-bold leading-tight sm:text-5xl lg:text-7xl">
+            Alex Carter,
+            <span class="bg-gradient-to-r from-accent to-accentLight bg-clip-text text-transparent">Front-End Engineer</span>
+          </h1>
+          <p class="mt-5 max-w-2xl text-base text-white/70 sm:text-lg">
+            I craft high-performance digital products with modern UI architecture, design precision, and conversion-focused interaction.
+          </p>
+          <p class="mt-4 max-w-2xl text-sm text-white/55 sm:text-base">
+            Specializing in scalable web interfaces, design systems, and delightful user experiences for startups and enterprise platforms.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a href="#" class="rounded-xl bg-gradient-to-r from-accent to-accentLight px-6 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5 hover:shadow-xl">
+              Download Resume
+            </a>
+            <a href="#contact" class="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:-translate-y-0.5 hover:border-accent/60 hover:text-accentLight">
+              Contact Me
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+        <div class="mb-10 reveal">
+          <h2 class="font-display text-3xl font-bold sm:text-4xl">
+            About <span class="bg-gradient-to-r from-accent to-accentLight bg-clip-text text-transparent">Me</span>
+          </h2>
+        </div>
+        <div class="grid gap-6 md:grid-cols-3 reveal">
+          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:col-span-2">
+            <p class="text-white/75">
+              I am a senior front-end engineer with 8+ years of experience building responsive, accessible, and visually polished web products. I bridge business goals and user needs with thoughtful architecture and refined interaction design.
+            </p>
+            <ul class="mt-6 grid gap-3 text-sm text-white/70 sm:grid-cols-2">
+              <li class="rounded-xl border border-white/10 bg-black/20 p-3">✔ Built and scaled design systems used across 20+ products</li>
+              <li class="rounded-xl border border-white/10 bg-black/20 p-3">✔ Improved Core Web Vitals and reduced LCP by 35%</li>
+              <li class="rounded-xl border border-white/10 bg-black/20 p-3">✔ Led front-end teams across SaaS and fintech projects</li>
+              <li class="rounded-xl border border-white/10 bg-black/20 p-3">✔ Focused on clean code, performance, and usability</li>
+            </ul>
+          </article>
+          <aside class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <div class="grid h-56 place-items-center rounded-xl border border-dashed border-white/20 bg-gradient-to-br from-white/10 to-white/0 text-white/50">
+              Profile Image
+            </div>
+            <p class="mt-4 text-sm text-white/60">Based in San Francisco, working globally with remote teams.</p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Skills Section -->
+      <section id="skills" class="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+        <div class="mb-10 reveal">
+          <h2 class="font-display text-3xl font-bold sm:text-4xl">
+            Core <span class="bg-gradient-to-r from-accent to-accentLight bg-clip-text text-transparent">Skills</span>
+          </h2>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="reveal rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow">
+            <p class="text-2xl">⚛️</p>
+            <h3 class="mt-2 font-display text-lg font-semibold">HTML / CSS</h3>
+            <div class="mt-4 h-2 rounded-full bg-white/10"><div class="h-full w-[95%] rounded-full bg-gradient-to-r from-accent to-accentLight"></div></div>
+            <p class="mt-2 text-xs text-white/55">Expert</p>
+          </article>
+          <article class="reveal rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow">
+            <p class="text-2xl">🧠</p>
+            <h3 class="mt-2 font-display text-lg font-semibold">JavaScript</h3>
+            <div class="mt-4 h-2 rounded-full bg-white/10"><div class="h-full w-[90%] rounded-full bg-gradient-to-r from-accent to-accentLight"></div></div>
+            <p class="mt-2 text-xs text-white/55">Advanced</p>
+          </article>
+          <article class="reveal rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow">
+            <p class="text-2xl">🎨</p>
+            <h3 class="mt-2 font-display text-lg font-semibold">UI Engineering</h3>
+            <div class="mt-4 h-2 rounded-full bg-white/10"><div class="h-full w-[92%] rounded-full bg-gradient-to-r from-accent to-accentLight"></div></div>
+            <p class="mt-2 text-xs text-white/55">Expert</p>
+          </article>
+          <article class="reveal rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow">
+            <p class="text-2xl">🚀</p>
+            <h3 class="mt-2 font-display text-lg font-semibold">Performance</h3>
+            <div class="mt-4 h-2 rounded-full bg-white/10"><div class="h-full w-[88%] rounded-full bg-gradient-to-r from-accent to-accentLight"></div></div>
+            <p class="mt-2 text-xs text-white/55">Advanced</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Experience Timeline -->
+      <section id="experience" class="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+        <div class="mb-10 reveal">
+          <h2 class="font-display text-3xl font-bold sm:text-4xl">
+            Work <span class="bg-gradient-to-r from-accent to-accentLight bg-clip-text text-transparent">Experience</span>
+          </h2>
+        </div>
+        <div class="relative border-l border-white/15 pl-6 sm:pl-8">
+          <article class="reveal relative mb-10 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <span class="absolute -left-[33px] top-8 h-3 w-3 rounded-full bg-accent"></span>
+            <h3 class="font-display text-xl font-semibold">Senior Front-End Engineer</h3>
+            <p class="mt-1 text-sm text-accentLight">NovaTech Systems · 2021 — Present</p>
+            <ul class="mt-4 list-disc space-y-2 pl-5 text-sm text-white/70">
+              <li>Architected a reusable UI platform that reduced development time by 30%.</li>
+              <li>Mentored 6 engineers and introduced front-end quality standards.</li>
+              <li>Improved conversion by 22% through UX and interaction redesign.</li>
+            </ul>
+          </article>
+          <article class="reveal relative mb-10 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <span class="absolute -left-[33px] top-8 h-3 w-3 rounded-full bg-accent"></span>
+            <h3 class="font-display text-xl font-semibold">UI Engineer</h3>
+            <p class="mt-1 text-sm text-accentLight">BrightLayer Studio · 2018 — 2021</p>
+            <ul class="mt-4 list-disc space-y-2 pl-5 text-sm text-white/70">
+              <li>Built component libraries for B2B SaaS dashboards and portals.</li>
+              <li>Collaborated with product and design to launch features rapidly.</li>
+              <li>Established accessibility baselines for WCAG 2.1 compliance.</li>
+            </ul>
+          </article>
+          <article class="reveal relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <span class="absolute -left-[33px] top-8 h-3 w-3 rounded-full bg-accent"></span>
+            <h3 class="font-display text-xl font-semibold">Front-End Developer</h3>
+            <p class="mt-1 text-sm text-accentLight">Pixel Forge · 2015 — 2018</p>
+            <ul class="mt-4 list-disc space-y-2 pl-5 text-sm text-white/70">
+              <li>Developed responsive client websites across healthcare and fintech.</li>
+              <li>Optimized delivery workflows and reduced production bugs.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section id="projects" class="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+        <div class="mb-10 reveal">
+          <h2 class="font-display text-3xl font-bold sm:text-4xl">
+            Featured <span class="bg-gradient-to-r from-accent to-accentLight bg-clip-text text-transparent">Projects</span>
+          </h2>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <article class="reveal overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:shadow-glow">
+            <div class="grid h-40 place-items-center bg-gradient-to-br from-accent/30 to-transparent text-white/60">Project Image</div>
+            <div class="p-5">
+              <h3 class="font-display text-lg font-semibold">SaaS Analytics Dashboard</h3>
+              <p class="mt-2 text-sm text-white/65">A performant analytics suite with real-time data modules and customizable widgets.</p>
+              <div class="mt-4 flex flex-wrap gap-2 text-xs">
+                <span class="rounded-full border border-white/15 px-3 py-1">Tailwind</span><span class="rounded-full border border-white/15 px-3 py-1">JavaScript</span><span class="rounded-full border border-white/15 px-3 py-1">API</span>
+              </div>
+              <a href="#" class="mt-5 inline-block text-sm font-semibold text-accentLight hover:text-accent">View Project →</a>
+            </div>
+          </article>
+
+          <article class="reveal overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:shadow-glow">
+            <div class="grid h-40 place-items-center bg-gradient-to-br from-accent/30 to-transparent text-white/60">Project Image</div>
+            <div class="p-5">
+              <h3 class="font-display text-lg font-semibold">Fintech Onboarding Flow</h3>
+              <p class="mt-2 text-sm text-white/65">Conversion-focused onboarding experience with strong accessibility and validation patterns.</p>
+              <div class="mt-4 flex flex-wrap gap-2 text-xs">
+                <span class="rounded-full border border-white/15 px-3 py-1">UX</span><span class="rounded-full border border-white/15 px-3 py-1">Forms</span><span class="rounded-full border border-white/15 px-3 py-1">A11y</span>
+              </div>
+              <a href="#" class="mt-5 inline-block text-sm font-semibold text-accentLight hover:text-accent">View Project →</a>
+            </div>
+          </article>
+
+          <article class="reveal overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:shadow-glow">
+            <div class="grid h-40 place-items-center bg-gradient-to-br from-accent/30 to-transparent text-white/60">Project Image</div>
+            <div class="p-5">
+              <h3 class="font-display text-lg font-semibold">Enterprise Design System</h3>
+              <p class="mt-2 text-sm text-white/65">Scalable component framework with documentation standards and governance workflows.</p>
+              <div class="mt-4 flex flex-wrap gap-2 text-xs">
+                <span class="rounded-full border border-white/15 px-3 py-1">Design System</span><span class="rounded-full border border-white/15 px-3 py-1">Tokens</span><span class="rounded-full border border-white/15 px-3 py-1">Docs</span>
+              </div>
+              <a href="#" class="mt-5 inline-block text-sm font-semibold text-accentLight hover:text-accent">View Project →</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Testimonials -->
+      <section id="testimonials" class="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+        <div class="mb-10 reveal">
+          <h2 class="font-display text-3xl font-bold sm:text-4xl">
+            Testimonials <span class="bg-gradient-to-r from-accent to-accentLight bg-clip-text text-transparent">& Achievements</span>
+          </h2>
+        </div>
+        <div class="grid gap-6 md:grid-cols-3">
+          <article class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <p class="text-white/75">“Alex consistently delivered pixel-perfect experiences while improving performance metrics.”</p>
+            <p class="mt-4 text-sm text-accentLight">— Product Director, NovaTech</p>
+          </article>
+          <article class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <p class="text-white/75">Awarded “Top UI Innovator 2023” for leading a high-impact design system rollout.</p>
+            <p class="mt-4 text-sm text-accentLight">— UX Guild</p>
+          </article>
+          <article class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <p class="text-white/75">“Strong engineering rigor with exceptional taste for user-centered interface design.”</p>
+            <p class="mt-4 text-sm text-accentLight">— CTO, BrightLayer</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+        <div class="mb-10 reveal">
+          <h2 class="font-display text-3xl font-bold sm:text-4xl">
+            Get In <span class="bg-gradient-to-r from-accent to-accentLight bg-clip-text text-transparent">Touch</span>
+          </h2>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <form class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <div class="mb-4">
+              <label for="name" class="mb-2 block text-sm text-white/70">Name</label>
+              <input id="name" type="text" class="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/30" placeholder="Your name" />
+            </div>
+            <div class="mb-4">
+              <label for="email" class="mb-2 block text-sm text-white/70">Email</label>
+              <input id="email" type="email" class="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/30" placeholder="you@email.com" />
+            </div>
+            <div class="mb-4">
+              <label for="message" class="mb-2 block text-sm text-white/70">Message</label>
+              <textarea id="message" rows="5" class="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/30" placeholder="Tell me about your project..."></textarea>
+            </div>
+            <button type="submit" class="rounded-xl bg-gradient-to-r from-accent to-accentLight px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-glow">Send Message</button>
+          </form>
+
+          <aside class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <p class="text-white/75">Let’s build something remarkable together. I’m open to product collaborations, consulting, and lead front-end roles.</p>
+            <div class="mt-6 space-y-3 text-sm text-white/70">
+              <p>Email: hello@alexcarter.dev</p>
+              <p>Phone: +1 (555) 019-3487</p>
+              <p>Location: San Francisco, CA</p>
+            </div>
+            <div class="mt-6 flex gap-3 text-sm">
+              <a href="#" class="rounded-lg border border-white/15 px-3 py-2 transition hover:border-accent/60 hover:text-accentLight">LinkedIn</a>
+              <a href="#" class="rounded-lg border border-white/15 px-3 py-2 transition hover:border-accent/60 hover:text-accentLight">GitHub</a>
+              <a href="#" class="rounded-lg border border-white/15 px-3 py-2 transition hover:border-accent/60 hover:text-accentLight">Dribbble</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-8">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 text-sm text-white/60 md:flex-row lg:px-8">
+        <p>© 2026 Alex Carter. All rights reserved.</p>
+        <p>Designed with precision, built for performance.</p>
+        <div class="flex gap-4">
+          <a href="#" class="hover:text-accentLight">LinkedIn</a>
+          <a href="#" class="hover:text-accentLight">GitHub</a>
+          <a href="#" class="hover:text-accentLight">X</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Loading animation
+      window.addEventListener("load", () => {
+        const loader = document.getElementById("loader");
+        setTimeout(() => {
+          loader.classList.add("opacity-0", "pointer-events-none");
+        }, 450);
+      });
+
+      // Navbar background on scroll
+      const navbar = document.getElementById("navbar");
+      const progress = document.getElementById("scroll-progress");
+
+      const updateScrollUI = () => {
+        const y = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const width = total > 0 ? (y / total) * 100 : 0;
+        progress.style.width = `${width}%`;
+
+        if (y > 20) {
+          navbar.classList.add("bg-black/45", "backdrop-blur-xl", "border-white/10");
+        } else {
+          navbar.classList.remove("bg-black/45", "backdrop-blur-xl", "border-white/10");
+        }
+      };
+
+      window.addEventListener("scroll", updateScrollUI, { passive: true });
+      updateScrollUI();
+
+      // Mobile menu toggle
+      const menuToggle = document.getElementById("menu-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      menuToggle.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+
+      // Close mobile menu when a link is clicked
+      mobileMenu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => mobileMenu.classList.add("hidden"));
+      });
+
+      // Fade-in on scroll with Intersection Observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+
+      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+
+      // Prevent default submit (demo form)
+      document.querySelector("form").addEventListener("submit", (e) => {
+        e.preventDefault();
+      });
+    </script>
+  </body>
+</html>
